@@ -1,0 +1,24 @@
+{
+  "name": "gumroad-webhook-handler",
+  "version": "1.0.0",
+  "description": "Webhook handler for Gumroad sales - forwards to Telegram and logs to CSV",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "gumroad",
+    "webhook",
+    "telegram",
+    "automation"
+  ],
+  "author": "Tyler Damm",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
