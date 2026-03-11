@@ -161,8 +161,8 @@ app.post('/test', (req, res) => {
   );
 });
 
-// Start server
-app.listen(PORT, () => {
+// Start server - bind to 0.0.0.0 for Railway/cloud hosting
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Webhook handler running on port ${PORT}`);
   console.log(`📍 Webhook URL: http://localhost:${PORT}/webhook/gumroad`);
   console.log(`🔒 OpenClaw gateway: ${OPENCLAW_GATEWAY || 'Not configured'}`);
