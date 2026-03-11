@@ -22,12 +22,24 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ 
+  console.log('Health check request received');
+  res.status(200).json({ 
     status: 'running',
     service: 'gumroad-webhook-handler',
     version: '1.0.0',
     timestamp: new Date().toISOString()
   });
+});
+
+// Additional health check endpoints Railway might use
+app.get('/health', (req, res) => {
+  console.log('Health endpoint hit');
+  res.status(200).send('OK');
+});
+
+app.get('/healthz', (req, res) => {
+  console.log('Healthz endpoint hit');
+  res.status(200).send('OK');
 });
 
 // Gumroad webhook endpoint
@@ -162,8 +174,24 @@ app.post('/test', (req, res) => {
 });
 
 // Start server - bind to 0.0.0.0 for Railway/cloud hosting
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Webhook handler running on port ${PORT}`);
-  console.log(`📍 Webhook URL: http://localhost:${PORT}/webhook/gumroad`);
+  console.log(`📍 Webhook URL: http://0.0.0.0:${PORT}/webhook/gumroad`);
   console.log(`🔒 OpenClaw gateway: ${OPENCLAW_GATEWAY || 'Not configured'}`);
+  console.log(`✅ Server is listening and ready to accept connections`);
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+  process.exit(1);
+});
+
+// Keep process alive
+process.on('SIGTERM', () => {
+  console.log('⚠️ SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });
